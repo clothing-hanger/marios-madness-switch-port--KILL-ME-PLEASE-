@@ -68,7 +68,7 @@ return {
         picoSpeak = love.filesystem.load("sprites/Overdue/picoSpeak.lua")()
 
         characterPositions = {
-            street = {
+            street = { 
                 enemy = {x = -1172, y = 222, sizeX = 1, sizeY = 1},
                 boyfriend = {x = 700, y = 23, sizeX = 1, sizeY = 1}
             },

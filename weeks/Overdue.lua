@@ -21,7 +21,7 @@ local stage
 
 return {
 	enter = function(self, from, songNum, songAppend, _songExt, _audioAppend)
-		print("COCKCOCK")
+		print("COCKCOCK") 
 		weeks:enter()
 
 		stage = stages["overdue.base"]

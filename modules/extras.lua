@@ -148,6 +148,7 @@ end
 function weeks.generatePsychEvents(self, eventsChart)
     modEvents = {}
     local eventsChart = getFilePath(eventsChart)
+    print(eventsChart)
     eventsChart = json.decode(love.filesystem.read(eventsChart)).song
 
     for i, event in ipairs(eventsChart.events) do
@@ -160,6 +161,16 @@ function weeks.generatePsychEvents(self, eventsChart)
     end
 
 
+    for i, section in ipairs(eventsChart.notes) do
+        for j, note in ipairs(section.sectionNotes) do
+            local noteType = note[2]
+
+            if noteType == -1 then
+                local time, name, value1, value2 = note[1], note[3], note[4], note[5]
+                table.insert(modEvents, {time = time, name = name, value1 = value1, value2 = value2})
+            end
+        end
+    end
     table.sort(modEvents, function(a, b) return a.time < b.time end)
 end
 

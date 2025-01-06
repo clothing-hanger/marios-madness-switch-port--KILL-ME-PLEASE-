@@ -33,14 +33,25 @@ return {
             ["mouth fg close"] = graphics.newImage(graphics.imagePath("Overdue/meat/TL_Meat_CloseFG")),
             ["mouth bg far"] = graphics.newImage(graphics.imagePath("Overdue/meat/TL_Meat_FarBG")),
             ["mouth bottom teeth"] = graphics.newImage(graphics.imagePath("Overdue/meat/TL_Meat_FG_bottomteeth")),
+
+            ["transition bottom teeth"] = graphics.newImage(graphics.imagePath("Overdue/meat/TL_Meat_FG_bottomteeth")),
+
             ["mouth top teeth"] = graphics.newImage(graphics.imagePath("Overdue/meat/TL_Meat_FG_topteeth")),
+
+            ["transition top teeth"] = graphics.newImage(graphics.imagePath("Overdue/meat/TL_Meat_FG_topteeth2")),
+
             ["mouth string"] = graphics.newImage(graphics.imagePath("Overdue/meat/TL_Meat_FG_string")),
             ["mouth fog"] = graphics.newImage(graphics.imagePath("Overdue/meat/TL_Meat_Fog")),
             ["mouth inside"] = graphics.newImage(graphics.imagePath("Overdue/meat/TL_Meat_Ground")),
             ["mouth pupil"] = graphics.newImage(graphics.imagePath("Overdue/meat/TL_Meat_Pupil")),
             ["mouth sky"] = graphics.newImage(graphics.imagePath("Overdue/meat/TL_Meat_Sky")),
             ["mouth bg med"] = graphics.newImage(graphics.imagePath("Overdue/meat/TL_Meat_MedBG"))
+
         }
+
+        stageImages["transition bottom teeth"].x, stageImages["transition bottom teeth"].y = 342, 742
+        stageImages["transition top teeth"].x, stageImages["transition top teeth"].y = 342, -996
+        stageImages["transition top teeth"].sizeX, stageImages["transition top teeth"].sizeY = 0.5, 0.5
 
         stageImages["mouth bg"].x, stageImages["mouth bg"].y = 333, 2
         stageImages["mouth fg close"].x, stageImages["mouth fg close"].y = 333, 4
@@ -82,15 +93,48 @@ return {
         enemy.x, enemy.y = -1172, 222
         boyfriend.x, boyfriend.y = 700, 23
 
-        enemy = realer
-        boyfriend = picoStand
+        enemy = faker
+        boyfriend = picoCroutch
+
+        picoSpeak.x, picoSpeak.y = boyfriend.x, boyfriend.y
+
+        stageMode = "street"
+
+    end,
+
+    closeTeeth = function(self)
+        didTeethThingy = true
+        local returnXbottom, returnYbottom = stageImages["transition bottom teeth"].x, stageImages["transition bottom teeth"].y
+        local returnXtop, returnYtop = stageImages["transition top teeth"].x, stageImages["transition top teeth"].y
+
+        local closeTime = 0.3
+        local waitTime = 0.3
+        local openTime = 0.3
+
+        Timer.tween(closeTime, stageImages["transition top teeth"], {y = -486}, "in-quad")
+        Timer.tween(closeTime, stageImages["transition bottom teeth"], {y = 113}, "in-quad", function()
+            stageMode = "mouth"
+            Timer.after(waitTime, function()
+                Timer.tween(openTime, stageImages["transition top teeth"], {y = returnYtop}, "in-quad")
+                Timer.tween(openTime, stageImages["transition bottom teeth"], {y = returnYbottom}, "in-quad")
+            end)
+        end)
+
     end,
 
     load = function()
+        didTeethThingy = false
+
+        musicTime = 74634
+
 
     end,
 
     update = function(self, dt)
+        if musicTime >= 84634 and not didTeethThingy then
+            self:closeTeeth()
+        end
+
     end,
 
     drawStreet = function(self)
@@ -107,7 +151,17 @@ return {
                 stageImages["street road"]:draw()
                 stageImages["street car"]:draw()
                 enemy:draw()
-                boyfriend:draw()
+                if picoSpeak:isAnimated() then 
+                    picoSpeak:draw()
+                else
+                    boyfriend:draw()
+                end
+            love.graphics.pop()
+
+            love.graphics.push()
+                love.graphics.translate(camera.x*1.1,camera.y*1.1)
+                stageImages["transition bottom teeth"]:draw()
+                stageImages["transition top teeth"]:draw()
             love.graphics.pop()
 
         love.graphics.pop()
@@ -136,15 +190,20 @@ return {
                 love.graphics.translate(camera.x,camera.y)
                 stageImages["mouth inside"]:draw()
                 stageImages["mouth pupil"]:draw()
-                boyfriend:draw()
-                enemy:draw()
+              --  boyfriend:draw()
+               -- enemy:draw()
             love.graphics.pop()
 
             love.graphics.push()
                 love.graphics.translate(camera.x*1.1,camera.y*1.1)
                 stageImages["mouth string"]:draw()
-                stageImages["mouth bottom teeth"]:draw()
+                stageImages["transition bottom teeth"]:draw()
                 stageImages["mouth top teeth"]:draw()
+            love.graphics.pop()
+
+            love.graphics.push()
+                love.graphics.translate(camera.x*1.1,camera.y*1.1)
+                stageImages["transition top teeth"]:draw()
             love.graphics.pop()
 
             love.graphics.push()
@@ -162,7 +221,14 @@ return {
     end,
 
     draw = function(self)
-        self.drawMouth()
+        if stageMode == "street" then
+
+            self.drawStreet()
+        end
+
+        if stageMode == "mouth" then
+            self.drawMouth()
+        end
     end,
 
     leave = function()

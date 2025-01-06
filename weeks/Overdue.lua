@@ -16,11 +16,72 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------]]
+local events = {
+	["Triggers Universal"] = {
+		func = function(value1, value2)
+		--	print("I DONT FUCKING KNOW WHAT THIS IS SUPPOSED TO DO IT HAS A STUPID ASS NAME")
+		end
+	},
+	["Play Animation"] = {
+		func = function(value1, value2)
+			--if value2 == "boyfriend" or value1 == 0 then boyfriend:animate(value1) end
+		--	if value2 == "dad" or value1 == 1 then enemy:animate(value1) end
+			--if value2 == "girlfriend" or value1 == 2 then girlfriend:animate(value1) end
+		end
+	},
+	["Add Subtitle"] = {
+		func = function(value1, value2)
+			subtitle = value1
+		end
+	},
+	["Change Character"] = {
+		func = function(value1, value2)
+		--	if value1 == "BF" or value1 == 0 then
+			--	boyfriend = value2
+			--elseif value1 == "Dad" or value1 == 1 then
+			--	enemy = value2
+			--elseif value1 == "GF" or value1 == 2 then
+			--	girlfriend = value2 -- prob wont be used (i HATE women)
+			--
+		end,
+		func = function(value1, value2)
+			
+			--print(value1)
+			--print(value2)
+		end
+	},
+	["Show Song"] = {
+		func = function(value1, value2)
+			print("penis cock 2")
 
+		end
+	},
+	["Add Camera Zoom"] = {
+		func = function(value1, value2)
+			if not value1 then print("i shit my ass") return end
+		--	print("THE PENIS" .. value1)
+		--	print("THE COCK" .. tonumber(value1))
+
+			--camera.zoom = camera.zoom+tonumber(value1) or (camera.zoom + 0.015)
+		end 
+	},
+	["Set Cam Zoom"] = {
+		func = function(value1, value2)
+			camera.defaultZoom = value1
+		end
+	},
+	["Screen Shake"] = {
+		func = function(value1, value2)
+			print("imagine joe biden shaking his ass :drool: :drool: :drool:")
+		end
+	},
+}
 local stage
+local subtitle
 
 return {
 	enter = function(self, from, songNum, songAppend, _songExt, _audioAppend)
+		
 		print("COCKCOCK") 
 		weeks:enter()
 
@@ -29,19 +90,23 @@ return {
 		stage:enter(_songExt)
 
 		song = songNum
-		difficulty = songAppend
+		difficulty = songAppend 
 		songExt = _songExt
 		audioAppend = _audioAppend
 
 		self:load()
 	end,
 
+
+
 	onEvent = function(self, event)
-		for i = 1,#event.events do
-			local eventName = event.events[j][1]
-			local value1 = event.events[j][2]
-			local value2 = event.events[j][3]
-			print(eventName .. "  " .. value1 .. "  " .. value2)
+
+		local eventName = event.name
+		local value1 = event.value1
+		local value2 = event.value2
+		print("EVENT: " .. eventName .. " VALUE1: " .. value1 .. " VALUE2: " .. value2)
+		for name, eventThingy in pairs(events) do
+			if eventName == name then eventThingy.func(value1, value2) end
 		end
 	end,
 

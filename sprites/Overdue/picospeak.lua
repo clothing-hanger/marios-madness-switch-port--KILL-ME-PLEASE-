@@ -151,7 +151,8 @@ return graphics.newSprite(
 	},
 	{
 		["one"] = {start = 1, stop = 68, speed = 24, offsetX = 0, offsetY = 0},
-		["two"] = {start = 69, stop = 147, speed = 24, offsetX = 0, offsetY = 0},
+		["two"] = {start = 69, stop = 100, speed = 24, offsetX = 0, offsetY = 0},
+		["three"] = {start = 101, stop = 147, speed = 24, offsetX = 0, offsetY = 0},
 	},
 	"one",
 	false

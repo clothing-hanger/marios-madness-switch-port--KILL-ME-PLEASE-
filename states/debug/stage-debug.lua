@@ -288,7 +288,7 @@ return {
 				)
 			end
 
-            uitextColored("\n\n\n\n\n\nCamX: " .. camera.x .. "\nCamY: " .. camera.y ..
+            uitextColored("\n\n\n\n\n\nCamX: " .. camera.x .. "\nCamY: " .. camera.y .. "\nCamZoom: " .. camera.zoom .. 
 				"\n\nPress Esc to exit at any time", 0, 40)
 		else
 			for i = 1, #dirTable do

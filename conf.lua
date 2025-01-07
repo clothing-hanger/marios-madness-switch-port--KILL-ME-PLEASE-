@@ -23,7 +23,7 @@ local version = love.filesystem.getInfo("version.txt") and love.filesystem.read(
 local _debug = not love.filesystem.isFused()
 local loveVer
 function love.conf(t)
-	t.identity = "VE-FNFR"
+	t.identity = "MARIOS-MADNESS-FNFR"
 	t.version = "11.4"
 	t.console = _debug
 	t.window.vsync = false

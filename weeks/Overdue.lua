@@ -27,6 +27,8 @@ local events = {
 			--if value2 == "boyfriend" or value1 == 0 then boyfriend:animate(value1) end
 		--	if value2 == "dad" or value1 == 1 then enemy:animate(value1) end
 			--if value2 == "girlfriend" or value1 == 2 then girlfriend:animate(value1) end
+
+			if value1 == "Hey" then enemy:animate("LuigiLaugh", false) end 
 		end
 	},
 	["Add Subtitle"] = {
@@ -58,11 +60,7 @@ local events = {
 	},
 	["Add Camera Zoom"] = {
 		func = function(value1, value2)
-			if not value1 then print("i shit my ass") return end
-		--	print("THE PENIS" .. value1)
-		--	print("THE COCK" .. tonumber(value1))
-
-			--camera.zoom = camera.zoom+tonumber(value1) or (camera.zoom + 0.015)
+			if type(value1) ~= "number" then camera.zoom = (camera.zoom + 0.015) else camera.zoom = (camera.zoom + value1) end
 		end 
 	},
 	["Set Cam Zoom"] = {
@@ -82,7 +80,6 @@ local subtitle
 return {
 	enter = function(self, from, songNum, songAppend, _songExt, _audioAppend)
 		
-		print("COCKCOCK") 
 		weeks:enter()
 
 		stage = stages["overdue.base"]
@@ -104,10 +101,50 @@ return {
 		local eventName = event.name
 		local value1 = event.value1
 		local value2 = event.value2
+
 		print("EVENT: " .. eventName .. " VALUE1: " .. value1 .. " VALUE2: " .. value2)
 		for name, eventThingy in pairs(events) do
 			if eventName == name then eventThingy.func(value1, value2) end
 		end
+	end,
+
+	onCameraEvent = function(self, value)
+		if camZoomTween then Timer.cancel(camZoomTween) end
+
+		print("ONCAMERAEVENT")
+		local type = type(value)
+		if type == "number" then
+			local value = value
+			if value == 0 then
+				print("ENEMY ZOOM")
+				local newCamSize = enemyZoom
+				camera.defaultZoom = newCamSize
+				--camZoomTween = Timer.tween(1, camera, {defaultZoom = newCamSize})
+			elseif value == 1 then
+				print("BOYFRIEND ZOOM")
+				local newCamSize = boyfriendZoom
+				camera.defaultZoom = newCamSize
+
+				--camZoomTween = Timer.tween(1, camera, {defaultZoom = newCamSize})
+			end
+		elseif type == "table" then
+			local value = tonumber(value.char)
+			if value == 0 then
+				print("ENEMY ZOOM")
+				local newCamSize = enemyZoom
+				camera.defaultZoom = newCamSize
+
+
+				--camZoomTween = Timer.tween(1, camera, {defaultZoom = newCamSize})
+			elseif value == 1 then
+				print("BOYFRIEND ZOOM")
+				local newCamSize = boyfriendZoom
+				camera.defaultZoom = newCamSize
+
+				--camZoomTween = Timer.tween(1, camera, {defaultZoom = newCamSize})
+			end
+		end
+		
 	end,
 
 	load = function(self)
@@ -141,6 +178,8 @@ return {
 		weeks:checkSongOver()
 
 		weeks:updateUI(dt)
+
+
 	end,
 
 	draw = function(self)

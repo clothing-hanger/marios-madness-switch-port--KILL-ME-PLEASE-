@@ -45,6 +45,11 @@ function uitextflarge(text,x,y,limit,align,hovered,r,sx,sy,ox,oy,kx,ky)
 	if not hovered then graphics.setColor(1,1,1) else graphics.setColor(0,0,0) end
 	love.graphics.printf(text,x,y,limit,align,r,sx,sy,ox,oy,kx,ky)
 end
+
+function checkMusicTime(checkedMusicTime)
+	return (musicTime >= checkedMusicTime and musicTime < checkedMusicTime+50)
+end
+
 function uitextf(text,x,y,limit,align,r,sx,sy,ox,oy,kx,ky,alpha)
 	local x = x or 0
 	local y = y or 0

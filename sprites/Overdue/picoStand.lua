@@ -1,5 +1,5 @@
 return graphics.newSprite(
-	graphics.imagePath("Overdue/Too_Late_Pico_assetsv2"),
+	graphics.imagePath("Overdue/Too_Late_Pico_ass_sets_v2"),
 	{
 		{x = 0, y = 0, width = 605, height = 502, offsetX = 0, offsetY = 0, offsetWidth = 0, offsetHeight = 0, rotated = false}, -- 1: Pico Idle Dance0000
 		{x = 0, y = 0, width = 605, height = 502, offsetX = 0, offsetY = 0, offsetWidth = 0, offsetHeight = 0, rotated = false}, -- 2: Pico Idle Dance0001

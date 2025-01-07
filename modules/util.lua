@@ -1,6 +1,7 @@
 local util = {}
-
+ 
 function util.lerp(a, b, t)
+    if not a or not b or not t then print("i just shit my ass") return end  -- no clue why this func just doesnt work sometimes
     return a + (b - a) * t
 end
 

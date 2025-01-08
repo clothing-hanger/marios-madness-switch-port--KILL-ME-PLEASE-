@@ -9,6 +9,7 @@ camera.locked = false
 camera.camBopIntensity = 1
 camera.camBopInterval = 4
 camera.lockedMoving = false
+camera.currentPoint = "NOTHING YET IDK"
 
 camera.esizeX = 1
 camera.esizeY = 1
@@ -52,13 +53,19 @@ function camera:addPoint(name, x, y)
 end
 
 function camera:moveToPoint(time, name, mustHit)
+    error("WHAT")
     if camera.locked then return end
     if camTimer then 
         Timer.cancel(camTimer)
     end
     mustHit = mustHit or true 
     camera.mustHit = mustHit
+    camera.currentPoint = name
     camTimer = Timer.tween(time, camera, {x = camera.points[name].x, y = camera.points[name].y}, "out-quad")
+end
+
+function camera:getCurrentPoint()
+    return camera.currentPoint
 end
 
 function camera:drawCameraPoints()

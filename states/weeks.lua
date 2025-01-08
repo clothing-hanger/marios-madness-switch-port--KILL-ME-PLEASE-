@@ -810,7 +810,6 @@ end
 			if event.time <= absMusicTime then
 				if event.name == "FocusCamera" and not camera.lockedMoving then
 					Gamestate.onCameraEvent(event.value)
-					print("WHYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
 					if type(event.value) == "number" then
 						if event.value == 0 then -- Boyfriend
 							camera:moveToPoint(1.25, "boyfriend")

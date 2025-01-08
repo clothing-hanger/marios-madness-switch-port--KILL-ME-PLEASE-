@@ -84,12 +84,18 @@ return {
                 enemyFaker = {x = -1172, y = 201, sizeX = 1, sizeY = 1, camX = 563, camY = 32, camZoom = 0.7},
                 enemyRealer = {x = -761, y = 26, sizeX = 1, sizeY = 1, camX = 563, camY = 32, camZoom = 1},
 
-                picoCroutch = {x = 700, y = 23, sizeX = 1, sizeY = 1, camX = -492, camY = -133, camZoom = 0.5}
+                picoCroutch = {x = 700, y = 23, sizeX = 1, sizeY = 1, camX = -492, camY = -133, camZoom = 0.5},
+                center = {camX = -313, camY = -45, camZoom = 0.45}
             },
             mouth = {
-                boyfriend = {x = 536, y = 279, sizeX = 0.5, sizeY = 0.5},
-                enemy = {x = -35, y = 194, sizeX = 0.5, sizeY = 0.5}
+                boyfriend = {x = 511, y = 350, sizeX = 0.5, sizeY = 0.5, camX = -431, -181, camZoom = 0.8},
+                enemy = {x = -35, y = 194, sizeX = 0.5, sizeY = 0.5, camX = -164, camY = 201, camZoom = 0.7}
             }
+        }
+
+        pupilPositions = {
+            enemy = {x = 272, y = -140},
+            boyfriend = {x = 321, -140}
         }
 
         
@@ -104,15 +110,31 @@ return {
 
 
         picoSpeak.x, picoSpeak.y = boyfriend.x, boyfriend.y
+        picoStand.x, picoStand.y = boyfriend.x, boyfriend.y
+
 
         stageMode = "street"
 
         camera:addPoint("enemy", characterPositions.street.enemyFaker.camX, characterPositions.street.enemyFaker.camY)  --1
         camera:addPoint("boyfriend", characterPositions.street.picoCroutch.camX, characterPositions.street.picoCroutch.camY)    --0.9
+        camera:addPoint("center", characterPositions.street.center.camX, characterPositions.street.center.camY)
+
 
         enemyZoom = characterPositions.street.enemyFaker.camZoom
         boyfriendZoom = characterPositions.street.picoCroutch.camZoom
 
+    end,
+
+    switchStageMode = function(self, mode)
+        if mode == "mouth" then
+            boyfriend.x, boyfriend.y = characterPositions.mouth.boyfriend.x, characterPositions.mouth.boyfriend.y
+            boyfriend.sizeX, boyfriend.sizeY = characterPositions.mouth.boyfriend.sizeX, characterPositions.mouth.boyfriend.sizeY
+
+            enemy.x, enemy.y = characterPositions.mouth.enemy.x, characterPositions.mouth.enemy.y
+            enemy.sizeX, enemy.sizeY = characterPositions.mouth.enemy.sizeX, characterPositions.mouth.enemy.sizeY
+
+        end
+        stageMode = mode
     end,
 
     closeTeeth = function(self)
@@ -121,19 +143,24 @@ return {
         local returnXbottom, returnYbottom = stageImages["transition bottom teeth"].x, stageImages["transition bottom teeth"].y
         local returnXtop, returnYtop = stageImages["transition top teeth"].x, stageImages["transition top teeth"].y
 
-        local closeTime = 0.1
+        local closeTime = 0.15
         local waitTime = 0.3
         local openTime = 0.3
-        camera.zoom = camera.zoom+0.35
+        --camera.zoom = camera.zoom+0.4
 
         Timer.tween(closeTime, stageImages["transition top teeth"], {y = -486}, "in-quad")
+        Timer.tween(1.5, camera, {zoom = camera.zoom+4})
         Timer.tween(closeTime, stageImages["transition bottom teeth"], {y = 113}, "in-quad", function()
-            stageMode = "mouth"
+            self:switchStageMode("mouth")
             Timer.after(waitTime, function()
                 Timer.tween(openTime, stageImages["transition top teeth"], {y = returnYtop}, "in-quad")
-                Timer.tween(openTime, stageImages["transition bottom teeth"], {y = returnYbottom}, "out-quad", function() doingTeethThingy = false end)
+                Timer.tween(openTime, stageImages["transition bottom teeth"], {y = returnYbottom}, "out-quad", function() doingTeethThingy = false; camera.lockedMoving = false end)
+                enemyZoom = 1
+               -- Timer.tween(openTime, camera, {zoom = camera.zoom-0.5})
+
+                
             end)
-        end)
+        end) 
 
     end,
 
@@ -147,18 +174,30 @@ return {
         realer.x = stageImages["mouth pupil"].x
         realer.y = stageImages["mouth pupil"].y
         picoSpeak:update(dt)
+        --print(camera.mustHit)
+
         --realer:update(dt)
-        if musicTime >= 84434 and not didTeethThingy then
-            self:closeTeeth()
-        end
+
 
         if checkMusicTime(20210) then camera:moveToPoint(0.1, "enemy"); camera.lockedMoving = true end
-        if checkMusicTime(21300)  and enemy:getAnimName() ~= "LuigiTransformation" then enemy:animate("LuigiTransformation", false); enemy.x, enemy.y = characterPositions.street.enemyRealer.x, characterPositions.street.enemyRealer.y end
-        if checkMusicTime(24000)  and enemy ~= realer then enemy = realer end
-        if checkMusicTime(22398)  then camera:moveToPoint(1, "boyfriend"); camera.lockedMoving = false; enemyZoom = characterPositions.street.enemyRealer.camZoomz end
-        if checkMusicTime(21473)  and not picoSpeak:isAnimated() then picoSpeak:animate("one", false, function() boyfriend = picoStand end) end
-        if checkMusicTime(42947) and not picoSpeak:isAnimated() then picoSpeak:animate("two", false) end
+        if checkMusicTime(21300) and enemy:getAnimName() ~= "LuigiTransformation" then enemy:animate("LuigiTransformation", false); enemy.x, enemy.y = characterPositions.street.enemyRealer.x, characterPositions.street.enemyRealer.y end
+        if checkMusicTime(24000) and enemy ~= realer then enemy = realer end
+        if checkMusicTime(22398) then camera.lockedMoving = false; enemyZoom = characterPositions.street.enemyRealer.camZoom end
+        if checkMusicTime(21473) and not picoSpeak:isAnimated() then picoSpeak:animate("one", false, function() boyfriend = picoStand end) end
+        if checkMusicTime(42947) and not picoSpeak:isAnimated() then picoSpeak:animate("two", false) --[[camera.lockedMoving = true]] end
+        if checkMusicTime(84315) and not camera.lockedMoving then camera:moveToPoint(0.5, "center"); camera.lockedMoving = true end
+        if checkMusicTime(84434) and not didTeethThingy then self:closeTeeth() end
 
+        --[
+
+        if pupilTimer then Timer.cancel(pupilTimer) end
+        if camera:getCurrentPoint() == "enemy" then 
+            pupilTimer = Timer.tween(1, stageImages["mouth pupil"], {x = pupilPositions.enemy.x})
+        elseif camera:getCurrentPoint() == "boyfriend" then
+            pupilTimer = Timer.tween(1, stageImages["mouth pupil"], {x = pupilPositions.boyfriend.x})
+        end
+        
+--]]
     end,
 
     drawStreet = function(self)
@@ -217,8 +256,8 @@ return {
                 love.graphics.translate(camera.x,camera.y)
                 stageImages["mouth inside"]:draw()
                 stageImages["mouth pupil"]:draw()
-              --  boyfriend:draw()
-               -- enemy:draw()
+                boyfriend:draw()
+                realer:draw()
             love.graphics.pop()
 
             love.graphics.push()

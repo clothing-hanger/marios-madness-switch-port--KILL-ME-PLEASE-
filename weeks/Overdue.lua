@@ -111,17 +111,14 @@ return {
 	onCameraEvent = function(self, value)
 		if camZoomTween then Timer.cancel(camZoomTween) end
 
-		print("ONCAMERAEVENT")
 		local type = type(value)
 		if type == "number" then
 			local value = value
 			if value == 0 then
-				print("ENEMY ZOOM")
 				local newCamSize = enemyZoom
 				camera.defaultZoom = newCamSize
 				--camZoomTween = Timer.tween(1, camera, {defaultZoom = newCamSize})
 			elseif value == 1 then
-				print("BOYFRIEND ZOOM")
 				local newCamSize = boyfriendZoom
 				camera.defaultZoom = newCamSize
 
@@ -130,14 +127,12 @@ return {
 		elseif type == "table" then
 			local value = tonumber(value.char)
 			if value == 0 then
-				print("ENEMY ZOOM")
 				local newCamSize = enemyZoom
 				camera.defaultZoom = newCamSize
 
 
 				--camZoomTween = Timer.tween(1, camera, {defaultZoom = newCamSize})
 			elseif value == 1 then
-				print("BOYFRIEND ZOOM")
 				local newCamSize = boyfriendZoom
 				camera.defaultZoom = newCamSize
 
